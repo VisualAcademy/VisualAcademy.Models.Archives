@@ -387,33 +387,45 @@ namespace VisualAcademy.Models.Archives
                 {
                     // All: 기타 더 검색이 필요한 컬럼이 있다면 추가 가능
                     items = items
-                        .Where(m => m.Name.Contains(searchQuery) || m.Title.Contains(searchQuery));
+                        .Where(m => m.Name.Contains(searchQuery) || m.Title.Contains(searchQuery) || m.FileName.Contains(searchQuery));
                 }
             }
             #endregion
 
             // 총 레코드 수 계산
-            var totalCount = await items.CountAsync();
+            var totalCount = items.Count();
 
             #region Sorting: 어떤 열에 대해 정렬(None, Asc, Desc)할 것인지 원하는 문자열로 지정
             // Sorting
             switch (sortOrder)
             {
                 case "Name":
+                    //items = items.OrderBy(m => m.Name);
                     items = items
                         .OrderBy(m => m.Name).ThenByDescending(m => m.Ref).ThenBy(m => m.RefOrder);
                     break;
                 case "NameDesc":
+                    //items = items.OrderByDescending(m => m.Name);
                     items = items
                         .OrderByDescending(m => m.Name).ThenByDescending(m => m.Ref).ThenBy(m => m.RefOrder);
                     break;
                 case "Title":
+                    //items = items.OrderBy(m => m.Title);
                     items = items
                         .OrderBy(m => m.Title).ThenByDescending(m => m.Ref).ThenBy(m => m.RefOrder);
                     break;
                 case "TitleDesc":
+                    //items = items.OrderByDescending(m => m.Title);
                     items = items
                         .OrderByDescending(m => m.Title).ThenByDescending(m => m.Ref).ThenBy(m => m.RefOrder);
+                    break;
+                case "Created":
+                    items = items
+                        .OrderBy(m => m.Created).ThenByDescending(m => m.Ref).ThenBy(m => m.RefOrder);
+                    break;
+                case "CreatedDesc":
+                    items = items
+                        .OrderByDescending(m => m.Created).ThenByDescending(m => m.Ref).ThenBy(m => m.RefOrder);
                     break;
                 default:
                     items = items
@@ -425,7 +437,109 @@ namespace VisualAcademy.Models.Archives
             // Paging
             items = items.Skip(pageIndex * pageSize).Take(pageSize);
 
-            return new ArticleSet<Archive, int>(await items.AsNoTracking().ToListAsync(), totalCount);
+            return new ArticleSet<Archive, int>(items.AsNoTracking().ToList(), totalCount);
+        }
+
+        public async Task<ArticleSet<Archive, long>> GetArticlesWithDateAsync<TParentIdentifier>(
+            int pageIndex,
+            int pageSize,
+            string searchField,
+            string searchQuery,
+            string sortOrder,
+            TParentIdentifier parentIdentifier, DateTime from, DateTime to)
+        {
+            var items =
+                _context.Archives
+                    .AsQueryable();
+
+            #region ParentBy: 특정 부모 키 값(int, string)에 해당하는 리스트인지 확인
+            // ParentBy 
+            if (parentIdentifier is int parentId && parentId != 0)
+            {
+                items = items.Where(m => m.ParentId == parentId);
+            }
+            else if (parentIdentifier is string parentKey && !string.IsNullOrEmpty(parentKey))
+            {
+                items = items.Where(m => m.ParentKey == parentKey);
+            }
+            #endregion
+
+            if (from != null && to != null)
+            {
+                items = items.Where(it => (it.PostDate == null) || it.PostDate >= from && it.PostDate <= to);
+            }
+
+            #region Search Mode: SearchField와 SearchQuery에 해당하는 데이터 검색
+            // Search Mode
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                if (searchField == "Name")
+                {
+                    // Name
+                    items = items
+                        .Where(m => m.Name.Contains(searchQuery));
+                }
+                else if (searchField == "Title")
+                {
+                    // Title
+                    items = items
+                        .Where(m => m.Title.Contains(searchQuery));
+                }
+                else
+                {
+                    // All: 기타 더 검색이 필요한 컬럼이 있다면 추가 가능
+                    items = items
+                        .Where(m => m.Name.Contains(searchQuery) || m.Title.Contains(searchQuery) || m.FileName.Contains(searchQuery));
+                }
+            }
+            #endregion
+
+            // 총 레코드 수 계산
+            var totalCount = items.Count();
+
+            #region Sorting: 어떤 열에 대해 정렬(None, Asc, Desc)할 것인지 원하는 문자열로 지정
+            // Sorting
+            switch (sortOrder)
+            {
+                case "Name":
+                    //items = items.OrderBy(m => m.Name);
+                    items = items
+                        .OrderBy(m => m.Name).ThenByDescending(m => m.Ref).ThenBy(m => m.RefOrder);
+                    break;
+                case "NameDesc":
+                    //items = items.OrderByDescending(m => m.Name);
+                    items = items
+                        .OrderByDescending(m => m.Name).ThenByDescending(m => m.Ref).ThenBy(m => m.RefOrder);
+                    break;
+                case "Title":
+                    //items = items.OrderBy(m => m.Title);
+                    items = items
+                        .OrderBy(m => m.Title).ThenByDescending(m => m.Ref).ThenBy(m => m.RefOrder);
+                    break;
+                case "TitleDesc":
+                    //items = items.OrderByDescending(m => m.Title);
+                    items = items
+                        .OrderByDescending(m => m.Title).ThenByDescending(m => m.Ref).ThenBy(m => m.RefOrder);
+                    break;
+                case "Created":
+                    items = items
+                        .OrderBy(m => m.Created).ThenByDescending(m => m.Ref).ThenBy(m => m.RefOrder);
+                    break;
+                case "CreatedDesc":
+                    items = items
+                        .OrderByDescending(m => m.Created).ThenByDescending(m => m.Ref).ThenBy(m => m.RefOrder);
+                    break;
+                default:
+                    items = items
+                        .OrderByDescending(m => m.Ref).ThenBy(m => m.RefOrder);
+                    break;
+            }
+            #endregion
+
+            // Paging
+            items = items.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return new ArticleSet<Archive, long>(items.AsNoTracking().ToList(), totalCount);
         }
 
         //[4][16] 답변: ReplyApp

@@ -72,5 +72,6 @@ namespace VisualAcademy.Models.Archives
         Task<SortedList<int, double>> GetMonthlyCreateCountAsync();
 
         // 강의 이외에 추가적인 API가 필요하다면 이곳에 기록(예를 들어, 시작일부터 종료일까지의 데이터 검색)
+        Task<ArticleSet<Archive, long>> GetArticlesWithDateAsync<TParentIdentifier>(int pageIndex, int pageSize, string searchField, string searchQuery, string sortOrder, TParentIdentifier parentIdentifier, DateTime from, DateTime to);
     }
 }
