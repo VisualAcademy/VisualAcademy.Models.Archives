@@ -393,7 +393,7 @@ namespace VisualAcademy.Models.Archives
             #endregion
 
             // 총 레코드 수 계산
-            var totalCount = items.Count();
+            var totalCount = await items.CountAsync();
 
             #region Sorting: 어떤 열에 대해 정렬(None, Asc, Desc)할 것인지 원하는 문자열로 지정
             // Sorting
@@ -437,7 +437,7 @@ namespace VisualAcademy.Models.Archives
             // Paging
             items = items.Skip(pageIndex * pageSize).Take(pageSize);
 
-            return new ArticleSet<Archive, int>(items.AsNoTracking().ToList(), totalCount);
+            return new ArticleSet<Archive, int>(await items.AsNoTracking().ToListAsync(), totalCount);
         }
 
         public async Task<ArticleSet<Archive, long>> GetArticlesWithDateAsync<TParentIdentifier>(
@@ -464,7 +464,7 @@ namespace VisualAcademy.Models.Archives
             }
             #endregion
 
-            if (from != null && to != null)
+            //if (from != null && to != null) // 무조건 날짜 검색 
             {
                 items = items.Where(it => (it.PostDate == null) || it.PostDate >= from && it.PostDate <= to);
             }
@@ -495,7 +495,7 @@ namespace VisualAcademy.Models.Archives
             #endregion
 
             // 총 레코드 수 계산
-            var totalCount = items.Count();
+            var totalCount = await items.CountAsync();
 
             #region Sorting: 어떤 열에 대해 정렬(None, Asc, Desc)할 것인지 원하는 문자열로 지정
             // Sorting
@@ -539,7 +539,7 @@ namespace VisualAcademy.Models.Archives
             // Paging
             items = items.Skip(pageIndex * pageSize).Take(pageSize);
 
-            return new ArticleSet<Archive, long>(items.AsNoTracking().ToList(), totalCount);
+            return new ArticleSet<Archive, long>(await items.AsNoTracking().ToListAsync(), totalCount);
         }
 
         //[4][16] 답변: ReplyApp
