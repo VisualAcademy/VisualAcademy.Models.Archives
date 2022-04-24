@@ -21,12 +21,12 @@ namespace VisualAcademy.Models.Archives
         /// <summary>
         /// 외래키? - AppId 형태로 ParentId와 ParentKey 속성은 보조로 만들어 놓은 속성
         /// </summary>
-        public int? ParentId { get; set; }
+        public int? ParentId { get; set; } = default;
 
         /// <summary>
         /// 외래키? - AppId 형태로 ParentId와 ParentKey 속성은 보조로 만들어 놓은 속성
         /// </summary>
-        public string? ParentKey { get; set; }
+        public string? ParentKey { get; set; } = string.Empty;
 
         #region Auditable
         /// <summary>
