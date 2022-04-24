@@ -173,7 +173,8 @@ namespace VisualAcademy.Models.Archives
         }
         #endregion
 
-        //[4][7] 부모
+        #region [4][7] 부모: GetAllByParentIdAsync() 
+        //[4][7] 부모: GetAllByParentIdAsync() 
         public async Task<PagingResult<Archive>> GetAllByParentIdAsync(
             int pageIndex,
             int pageSize,
@@ -191,8 +192,10 @@ namespace VisualAcademy.Models.Archives
 
             return new PagingResult<Archive>(models, totalRecords);
         }
+        #endregion
 
-        //[4][8] 상태
+        #region [4][8] 상태: GetStatus()
+        //[4][8] 상태: GetStatus()
         public async Task<Tuple<int, int>> GetStatus(int parentId)
         {
             var totalRecords = await _context.Archives
@@ -204,8 +207,13 @@ namespace VisualAcademy.Models.Archives
 
             return new Tuple<int, int>(pinnedRecords, totalRecords); // (2, 10)
         }
+        #endregion
 
-        //[4][9] 부모 삭제
+        #region [4][9] 부모 삭제: DeleteAllByParentId()
+        //[4][9] 부모 삭제: DeleteAllByParentId() 
+        /// <summary>
+        /// 특정 부모에 해당하는 자료 삭제 
+        /// </summary>
         public async Task<bool> DeleteAllByParentId(int parentId)
         {
             try
@@ -229,8 +237,10 @@ namespace VisualAcademy.Models.Archives
 
             return false;
         }
+        #endregion
 
-        //[4][10] 검색
+        #region [4][10] 검색: SearchAllAsync()
+        //[4][10] 검색: SearchAllAsync()
         public async Task<PagingResult<Archive>> SearchAllAsync(
             int pageIndex,
             int pageSize,
@@ -248,8 +258,13 @@ namespace VisualAcademy.Models.Archives
 
             return new PagingResult<Archive>(models, totalRecords);
         }
+        #endregion
 
-        //[4][11] 부모 검색
+        #region [4][11] 부모 검색: SearchAllByParentIdAsync()
+        //[4][11] 부모 검색: SearchAllByParentIdAsync()
+        /// <summary>
+        /// 특정 부모에 해당하는 자료들에서만 검색 
+        /// </summary>
         public async Task<PagingResult<Archive>> SearchAllByParentIdAsync(
             int pageIndex,
             int pageSize,
@@ -269,7 +284,8 @@ namespace VisualAcademy.Models.Archives
                 .ToListAsync();
 
             return new PagingResult<Archive>(models, totalRecords);
-        }
+        } 
+        #endregion
 
         //[4][12] 통계
         public async Task<SortedList<int, double>> GetMonthlyCreateCountAsync()
