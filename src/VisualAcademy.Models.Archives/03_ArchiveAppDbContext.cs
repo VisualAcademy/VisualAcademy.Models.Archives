@@ -10,7 +10,7 @@ namespace VisualAcademy.Models.Archives
     {
         #region NuGet Packages
         // .NET 6 이상만 사용할 때에는 해당 버전 이상만 사용
-        // PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 3.1.10
+        // PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 3.1.24
         // PM> Install-Package Microsoft.Data.SqlClient
         // PM> Install-Package System.Configuration.ConfigurationManager
         // --OR--

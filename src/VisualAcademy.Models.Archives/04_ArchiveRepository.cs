@@ -284,10 +284,11 @@ namespace VisualAcademy.Models.Archives
                 .ToListAsync();
 
             return new PagingResult<Archive>(models, totalRecords);
-        } 
+        }
         #endregion
 
-        //[4][12] 통계
+        #region [4][12] 통계: GetMonthlyCreateCountAsync()
+        //[4][12] 통계: GetMonthlyCreateCountAsync()
         public async Task<SortedList<int, double>> GetMonthlyCreateCountAsync()
         {
             SortedList<int, double> createCounts = new SortedList<int, double>();
@@ -316,8 +317,10 @@ namespace VisualAcademy.Models.Archives
 
             return await Task.FromResult(createCounts);
         }
+        #endregion
 
-        //[4][13] 부모 페이징
+        #region [4][13] 부모 페이징: GetAllByParentKeyAsync()
+        //[4][13] 부모 페이징: GetAllByParentKeyAsync()
         public async Task<PagingResult<Archive>> GetAllByParentKeyAsync(
             int pageIndex,
             int pageSize,
@@ -335,8 +338,10 @@ namespace VisualAcademy.Models.Archives
 
             return new PagingResult<Archive>(models, totalRecords);
         }
+        #endregion
 
-        //[4][14] 부모 검색
+        #region [4][14] 부모 검색: SearchAllByParentKeyAsync()
+        //[4][14] 부모 검색: SearchAllByParentKeyAsync()
         public async Task<PagingResult<Archive>> SearchAllByParentKeyAsync(
             int pageIndex,
             int pageSize,
@@ -345,11 +350,11 @@ namespace VisualAcademy.Models.Archives
         {
             var totalRecords = await _context.Archives
                 .Where(m => m.ParentKey == parentKey)
-                .Where(m => EF.Functions.Like(m.Name, $"%{searchQuery}%") || m.Title.Contains(searchQuery) || m.Title.Contains(searchQuery))
+                .Where(m => EF.Functions.Like(m.Name, $"%{searchQuery}%") || m.Title.Contains(searchQuery) || m.Content.Contains(searchQuery))
                 .CountAsync();
             var models = await _context.Archives
                 .Where(m => m.ParentKey == parentKey)
-                .Where(m => m.Name.Contains(searchQuery) || m.Title.Contains(searchQuery) || m.Title.Contains(searchQuery))
+                .Where(m => m.Name.Contains(searchQuery) || m.Title.Contains(searchQuery) || m.Content.Contains(searchQuery))
                 .OrderByDescending(m => m.Id)
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize)
@@ -357,8 +362,10 @@ namespace VisualAcademy.Models.Archives
 
             return new PagingResult<Archive>(models, totalRecords);
         }
+        #endregion
 
-        //[4][15] 리스트(페이징, 검색, 정렬)
+        #region [4][15] 리스트(페이징, 검색, 정렬): GetArticlesAsync()
+        //[4][15] 리스트(페이징, 검색, 정렬): GetArticlesAsync()
         public async Task<ArticleSet<Archive, int>> GetArticlesAsync<TParentIdentifier>(
             int pageIndex,
             int pageSize,
@@ -454,7 +461,8 @@ namespace VisualAcademy.Models.Archives
             items = items.Skip(pageIndex * pageSize).Take(pageSize);
 
             return new ArticleSet<Archive, int>(await items.AsNoTracking().ToListAsync(), totalCount);
-        }
+        } 
+        #endregion
 
         public async Task<ArticleSet<Archive, long>> GetArticlesWithDateAsync<TParentIdentifier>(
             int pageIndex,
