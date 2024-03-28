@@ -897,5 +897,10 @@ namespace VisualAcademy.Models.Archives
             }
         }
         #endregion
+
+        public Task<ArticleSet<Archive, int>> GetAllAsync<TParentIdentifier>(int pageIndex, int pageSize, string searchField, string searchQuery, string sortOrder, TParentIdentifier parentIdentifier, DateTime from, DateTime to)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
